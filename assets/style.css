@@ -1,0 +1,32 @@
+#editor {
+    padding-top: 1em;
+}
+
+.ag-theme-alpine.compact {
+    --ag-grid-size: 4px;
+}
+
+.btn,
+.form-control,
+.ag-root-wrapper {
+    border-radius: 0 !important;
+}
+
+.toolbar {
+    margin-bottom: 1px;
+    padding: 2px;
+    border-bottom: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+}
+
+.toolbar>.btn {
+    margin: 2px;
+}
+
+.editor-header {
+    text-transform: uppercase;
+    font-size: 1.5em;
+    padding: 2px;
+    border-bottom: 1px solid #bbb;
+}

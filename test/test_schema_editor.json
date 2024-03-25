@@ -1,0 +1,53 @@
+{
+    "name": "test",
+    "desc": "test##\n",
+    "version": "2.1.2",
+    "groups": [
+        {
+            "name": "Synthesis",
+            "desc": "Synthesis Options",
+            "order": 0
+        },
+        {
+            "name": "Clock Tree Synthesis",
+            "desc": "Clock Tree Synthesis Options",
+            "order": 1
+        },
+        {
+            "name": "Detail Route",
+            "desc": "Detail Route Options",
+            "order": 2
+        },
+        {
+            "name": "Fruit",
+            "desc": "Choose some fruit quantities",
+            "order": 3
+        }
+    ],
+    "items": [
+        {
+            "name": "item_1",
+            "desc": "item_1",
+            "group": "",
+            "default": "",
+            "type": "String",
+            "options": ""
+        },
+        {
+            "name": "item_2",
+            "desc": "item_2",
+            "group": "",
+            "default": "",
+            "type": "String",
+            "options": ""
+        },
+        {
+            "name": "item_3",
+            "desc": "item_3",
+            "group": "",
+            "default": "",
+            "type": "String",
+            "options": ""
+        }
+    ]
+}

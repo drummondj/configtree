@@ -1,0 +1,61 @@
+{
+    "name": "chip_implementation_schema",
+    "desc": "This schema is used to configure all physical implemention stages",
+    "version": "0.1.2",
+    "groups": [
+        {
+            "name": "Synthesis",
+            "desc": "Synthesis Options",
+            "order": 0
+        },
+        {
+            "name": "Clock Tree Synthesis",
+            "desc": "Clock Tree Synthesis Options",
+            "order": 1
+        },
+        {
+            "name": "Detail Route",
+            "desc": "Detail Route Options",
+            "order": 2
+        },
+        {
+            "name": "Fruit",
+            "desc": "Choose some fruit quantities",
+            "order": 3
+        }
+    ],
+    "items": [
+        {
+            "name": "synthesis_effort",
+            "desc": "Effort used during Synthesis step:\n\nlow = basic optimization\nmedium = additional optimization steps\nhigh = maximum effort and runtime",
+            "group": "Fruit",
+            "default": "1",
+            "type": "String",
+            "options": "low medium high"
+        },
+        {
+            "name": "bananas",
+            "desc": "How many bananas do you want?",
+            "group": "Fruit",
+            "default": "0",
+            "type": "Integer",
+            "options": ""
+        },
+        {
+            "name": "apples",
+            "desc": "How many apples do you want?",
+            "group": "Fruit",
+            "default": "0",
+            "type": "Integer",
+            "options": ""
+        },
+        {
+            "name": "oranges",
+            "desc": "How many oranges do you want?",
+            "group": "Fruit",
+            "default": "0",
+            "type": "Integer",
+            "options": ""
+        }
+    ]
+}

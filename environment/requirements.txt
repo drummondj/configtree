@@ -1,0 +1,9 @@
+dash
+dash-bootstrap-components
+pandas
+dataclass-wizard
+dash_extensions
+dash-ag-grid
+dash[testing]
+coverage
+
