@@ -11,12 +11,7 @@ def validate_alpha_num(text: str) -> bool:
 
 
 def validate_not_blank(text: str) -> bool:
-    valid = True
-    if text is None:
-        valid = False
-    elif text.strip() == "":
-        valid = False
-    return valid
+    return not text.strip() == ""
 
 
 def validate_version_number(text: str) -> bool:

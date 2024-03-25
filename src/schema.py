@@ -95,12 +95,7 @@ class Schema(JSONWizard):
 
 
 def from_json(string: str) -> Schema:
-    schemas = Schema.from_json(string)
-    if isinstance(schemas, list):
-        # TODO: throw something
-        return schemas[0]
-    else:
-        return schemas
+    return Schema.from_json(string)
 
 
 def load(filename: str) -> Schema:
