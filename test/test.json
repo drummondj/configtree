@@ -17,11 +17,6 @@
             "name": "dtr",
             "desc": "Detail Route Options",
             "order": 2
-        },
-        {
-            "name": "fruit",
-            "desc": "Choose some fruit",
-            "order": 3
         }
     ],
     "items": [
@@ -70,5 +65,6 @@
             "options": "",
             "errors": []
         }
-    ]
+    ],
+    "errors": []
 }

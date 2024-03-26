@@ -1,6 +1,5 @@
 import dash
-from dash import Dash, html, dcc
-from . import navbar
+from dash import Dash, html
 
 
 def render(app: Dash) -> html.Div:

@@ -3,7 +3,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List, Any
 from enum import Enum
-from dataclass_wizard import JSONWizard
+from dataclass_wizard import JSONWizard, json_field
 import json
 import src.helpers.validators as validators
 
@@ -99,7 +99,9 @@ class Schema(JSONWizard):
     version: str
     groups: List["SchemaGroup"] = field(default_factory=list)
     items: List["SchemaItem"] = field(default_factory=list)
-    errors: List["SchemaValidationError"] = field(default_factory=list)
+    errors: List["SchemaValidationError"] = json_field(
+        "errors", default_factory=list, dump=False
+    )  # type: ignore
 
     def copy(self) -> "Schema":
         return replace(self)

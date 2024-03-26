@@ -1,5 +1,5 @@
 test:
-	python -m coverage run -m pytest -v && coverage html
+	python -m coverage run --omit 'test/*' -m pytest -vv && coverage html
 
 run:
 	python3 main.py
