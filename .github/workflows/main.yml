@@ -1,0 +1,13 @@
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  test:
+    name: Run all tests
+    runs-on: ubuntu-22.04
+    steps:
+    - run: make test
+    
+  
