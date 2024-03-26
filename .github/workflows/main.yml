@@ -8,6 +8,9 @@ jobs:
     name: Run all tests
     runs-on: ubuntu-22.04
     steps:
-    - run: make test
+    - name: checkout repo
+      uses: actions/checkout@main
+    - name: Run tests
+      run: make test
     
   
