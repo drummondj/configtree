@@ -30,6 +30,7 @@ def test_add_item():
                 "group": "",
                 "type": "String",
                 "options": "",
+                "errors": [],
             }
         ]
     }

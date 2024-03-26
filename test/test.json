@@ -17,11 +17,6 @@
             "name": "Detail Route",
             "desc": "Detail Route Options",
             "order": 2
-        },
-        {
-            "name": "Fruit",
-            "desc": "Choose some fruit quantities",
-            "order": 3
         }
     ],
     "items": [
@@ -29,17 +24,19 @@
             "name": "synthesis_effort",
             "desc": "Effort used during Synthesis step:\n\nlow = basic optimization\nmedium = additional optimization steps\nhigh = maximum effort and runtime",
             "group": "Fruit",
-            "default": "1",
+            "default": "low",
             "type": "String",
-            "options": "low medium high"
+            "options": "low medium high",
+            "errors": []
         },
         {
             "name": "bananas",
             "desc": "How many bananas do you want?",
             "group": "Fruit",
-            "default": "0",
+            "default": "1",
             "type": "Integer",
-            "options": ""
+            "options": "0 100",
+            "errors": []
         },
         {
             "name": "apples",
@@ -47,7 +44,8 @@
             "group": "Fruit",
             "default": "0",
             "type": "Integer",
-            "options": ""
+            "options": "",
+            "errors": []
         },
         {
             "name": "oranges",
@@ -55,7 +53,17 @@
             "group": "Fruit",
             "default": "0",
             "type": "Integer",
-            "options": ""
+            "options": "",
+            "errors": []
+        },
+        {
+            "name": "timing_driven",
+            "desc": "<add description here>",
+            "group": "Synthesis",
+            "default": "1",
+            "type": "Boolean",
+            "options": "",
+            "errors": []
         }
     ]
 }

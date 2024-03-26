@@ -31,7 +31,8 @@
             "group": "",
             "default": "",
             "type": "String",
-            "options": ""
+            "options": "",
+            "errors": []
         },
         {
             "name": "item_2",
@@ -39,7 +40,8 @@
             "group": "",
             "default": "",
             "type": "String",
-            "options": ""
+            "options": "",
+            "errors": []
         },
         {
             "name": "item_3",
@@ -47,7 +49,8 @@
             "group": "",
             "default": "",
             "type": "String",
-            "options": ""
+            "options": "",
+            "errors": []
         }
     ]
 }

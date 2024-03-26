@@ -1,8 +1,8 @@
 from dash import html, callback, Input, Output
 import dash_bootstrap_components as dbc
 from src import schema as schema_factory
-from src.form_helpers import basic_text_input
-from src.validators import (
+from src.helpers.form import basic_text_input
+from src.helpers.validators import (
     validate_not_blank,
     validate_alpha_num,
     validate_version_number,
@@ -114,17 +114,21 @@ def needs_save(name: str, desc: str, value: str) -> bool:
         allow_duplicate=True,
     ),
     Output("alert-auto", "is_open"),
+    Output("alert-error", "is_open"),
+    Output("alert-error", "children"),
     Input("save-button", "n_clicks"),
     prevent_initial_call=True,
 )
 def save(n_clicks: bool):
     global next_schema, schema
     if n_clicks:
-        next_schema.save(filename)
-        schema = next_schema.copy()
-        return [True, True]
+        if not next_schema.save(filename):
+            return False, False, True, [error.message for error in next_schema.errors()]
+        else:
+            schema = next_schema.copy()
+            return True, True, False, []
     else:
-        return [False, False]
+        return False, False, False, []
 
 
 def alerts() -> html.Div:
@@ -135,6 +139,12 @@ def alerts() -> html.Div:
                 id="alert-auto",
                 is_open=False,
                 duration=4000,
+            ),
+            dbc.Alert(
+                "Error saving Schema",
+                id="alert-error",
+                is_open=False,
+                color="danger",
             ),
         ]
     )
