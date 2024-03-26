@@ -17,54 +17,53 @@
             "name": "dtr",
             "desc": "Detail Route Options",
             "order": 2
+        },
+        {
+            "name": "test",
+            "desc": "<add description here>",
+            "order": 3
         }
     ],
     "items": [
         {
             "name": "synthesis_effort",
             "desc": "Effort used during Synthesis step:\n\nlow = basic optimization\nmedium = additional optimization steps\nhigh = maximum effort and runtime",
-            "group": "fruit",
+            "group": "syn",
             "default": "low",
             "type": "String",
-            "options": "low medium high",
-            "errors": []
+            "options": "low medium high"
         },
         {
             "name": "bananas",
             "desc": "How many bananas do you want?",
-            "group": "fruit",
+            "group": "test",
             "default": "1",
             "type": "Integer",
-            "options": "0 100",
-            "errors": []
+            "options": "0 100"
         },
         {
             "name": "apples",
             "desc": "How many apples do you want?",
-            "group": "Fruit",
+            "group": "test",
             "default": "0",
             "type": "Integer",
-            "options": "",
-            "errors": []
+            "options": ""
         },
         {
             "name": "oranges",
             "desc": "How many oranges do you want?",
-            "group": "Fruit",
+            "group": "test",
             "default": "0",
             "type": "Integer",
-            "options": "",
-            "errors": []
+            "options": ""
         },
         {
             "name": "timing_driven",
-            "desc": "<add description here>",
-            "group": "Synthesis",
+            "desc": "Use timing driven optimization",
+            "group": "syn",
             "default": "1",
             "type": "Boolean",
-            "options": "",
-            "errors": []
+            "options": ""
         }
-    ],
-    "errors": []
+    ]
 }

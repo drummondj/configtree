@@ -6,16 +6,19 @@ from enum import Enum
 from dataclass_wizard import JSONWizard, json_field
 import json
 import src.helpers.validators as validators
+from copy import deepcopy
 
 
 @dataclass
 class SchemaValidationError:
-    def __init__(self, error: str, name: str, type: str, field: str):
-        self.error = error
-        self.name = name
-        self.type = type
-        self.field = field
-        self.message = f"{error} on {type} row '{name}' and column '{field}'"
+    def __init__(self, message: str, table: str, row: str, col: str):
+        self.message = message
+        self.table = table
+        self.row = row
+        self.col = col
+
+    def __repr__(self):
+        return f"{self.message} ({self.table = } {self.row = } {self.col = })"
 
 
 class SchemaItemType(Enum):
@@ -37,9 +40,11 @@ class SchemaItem(JSONWizard):
     default: Any
     type: SchemaItemType
     options: str = ""
-    errors: List[SchemaValidationError] = field(default_factory=list)
+    errors: List["SchemaValidationError"] = json_field(
+        "errors", default_factory=list, dump=False
+    )  # type: ignore
 
-    def __validate_field_type__(self, field: str, value: str) -> None:
+    def __validate_field_type__(self, col: str, value: str) -> None:
         type_error = None
         if self.type == SchemaItemType.int:
             if not validators.validate_type(value, int):
@@ -57,10 +62,32 @@ class SchemaItem(JSONWizard):
         if type_error:
             self.errors.append(
                 SchemaValidationError(
-                    f"Value '{value}' is not a '{type_error}'",
-                    self.name,
+                    f"Item {self.name} column '{col}' value '{value}' is not a {type_error}",
                     "item",
-                    field,
+                    self.name,
+                    col,
+                )
+            )
+
+    def validate_name(self) -> None:
+        if not validators.validate_alpha_num(self.name):
+            self.errors.append(
+                SchemaValidationError(
+                    f"Item {self.name} invalid, must not be blank and only contain a-z, A-Z, 0-9 and _",
+                    "item",
+                    self.name,
+                    "name",
+                )
+            )
+
+    def validate_desc(self) -> None:
+        if not validators.validate_not_blank(self.desc):
+            self.errors.append(
+                SchemaValidationError(
+                    f"Item {self.name} invalid description, must not be blank",
+                    "item",
+                    self.name,
+                    "desc",
                 )
             )
 
@@ -71,10 +98,28 @@ class SchemaItem(JSONWizard):
         for value in self.options.split():
             self.__validate_field_type__("options", value)
 
-    def validate(self) -> bool:
+    def validate_group(self, parent: "Schema") -> None:
+        match = next(
+            (group for group in parent.groups if group.name == self.group), None
+        )
+
+        if match is None:
+            self.errors.append(
+                SchemaValidationError(
+                    f"Item {self.name} invalid group {self.group}, must be an existing group {parent.get_group_names()}",
+                    "item",
+                    self.name,
+                    "group",
+                )
+            )
+
+    def validate(self, parent: "Schema") -> bool:
         self.errors = []
+        self.validate_name()
+        self.validate_desc()
         self.validate_default()
         self.validate_options()
+        self.validate_group(parent)
         if len(self.errors) == 0:
             return True
         else:
@@ -88,6 +133,52 @@ class SchemaGroup(JSONWizard):
     name: str
     desc: str
     order: int = 0
+    errors: List["SchemaValidationError"] = json_field(
+        "errors", default_factory=list, dump=False
+    )  # type: ignore
+
+    def validate_name(self) -> None:
+        if not validators.validate_alpha_num(self.name):
+            self.errors.append(
+                SchemaValidationError(
+                    f"Group {self.name} invalid, must not be blank and only contain a-z, A-Z, 0-9 and _",
+                    "group",
+                    self.name,
+                    "name",
+                )
+            )
+
+    def validate_desc(self) -> None:
+        if not validators.validate_not_blank(self.desc):
+            self.errors.append(
+                SchemaValidationError(
+                    f"Group {self.name} invalid description, must not be blank",
+                    "group",
+                    self.name,
+                    "desc",
+                )
+            )
+
+    def validate_order(self) -> None:
+        if not validators.validate_type(self.order, int):
+            self.errors.append(
+                SchemaValidationError(
+                    f"Group {self.name} invalid order, must be an Integer",
+                    "group",
+                    self.name,
+                    "order",
+                )
+            )
+
+    def validate(self) -> bool:
+        self.errors = []
+        self.validate_name()
+        self.validate_desc()
+        self.validate_order()
+        if len(self.errors) == 0:
+            return True
+        else:
+            return False
 
 
 @dataclass
@@ -104,15 +195,7 @@ class Schema(JSONWizard):
     )  # type: ignore
 
     def copy(self) -> "Schema":
-        return replace(self)
-
-    def __eq__(self, other) -> bool:
-        # TODO: add groups and items comparison
-        return (
-            self.name == other.name
-            and self.desc == other.desc
-            and self.version == other.version
-        )
+        return deepcopy(self)
 
     def get_group_names(self) -> List[str]:
         return [group.name for group in self.groups]
@@ -128,28 +211,73 @@ class Schema(JSONWizard):
         else:
             return False
 
-    def validate(self) -> bool:
-        passed = True
+    def validate_version(self) -> bool:
         if not validators.validate_version_number(self.version):
             self.errors.append(
                 SchemaValidationError(
-                    f"invalid version number {self.version}",
-                    self.name,
+                    f"Schema version number {self.version} must be formated as x.y.z",
                     "schema",
+                    self.name,
                     "version",
                 )
             )
+            return False
+        return True
+
+    def validate_name(self) -> bool:
+        if not validators.validate_alpha_num(self.name):
+            self.errors.append(
+                SchemaValidationError(
+                    f"Schema name {self.name} invalid, must not be blank and only contain a-z, A-Z, 0-9 and _",
+                    "schema",
+                    self.name,
+                    "name",
+                )
+            )
+            return False
+        return True
+
+    def validate_desc(self) -> bool:
+        if not validators.validate_not_blank(self.name):
+            self.errors.append(
+                SchemaValidationError(
+                    f"Schema {self.name} invalid description, must not be blank",
+                    self.name,
+                    "schema",
+                    "desc",
+                )
+            )
+            return False
+        return True
+
+    def validate(self) -> bool:
+        self.errors = []
+        passed = True
+
+        if not self.validate_name():
+            passed = False
+
+        if not self.validate_desc():
+            passed = False
+
+        if not self.validate_version():
             passed = False
 
         for item in self.items:
-            if not item.validate():
+            if not item.validate(self):
+                passed = False
+
+        for group in self.groups:
+            if not group.validate():
                 passed = False
         return passed
 
     def get_errors(self) -> List[SchemaValidationError]:
-        all_errors = self.errors
+        all_errors = self.errors.copy()
         for item in self.items:
             all_errors.extend(item.errors)
+        for group in self.groups:
+            all_errors.extend(group.errors)
         return all_errors
 
 

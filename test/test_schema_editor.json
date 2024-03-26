@@ -4,22 +4,22 @@
     "version": "2.1.2",
     "groups": [
         {
-            "name": "Synthesis",
+            "name": "syn",
             "desc": "Synthesis Options",
             "order": 0
         },
         {
-            "name": "Clock Tree Synthesis",
+            "name": "cts",
             "desc": "Clock Tree Synthesis Options",
             "order": 1
         },
         {
-            "name": "Detail Route",
+            "name": "drt",
             "desc": "Detail Route Options",
             "order": 2
         },
         {
-            "name": "Fruit",
+            "name": "fruit",
             "desc": "Choose some fruit quantities",
             "order": 3
         }
@@ -28,29 +28,26 @@
         {
             "name": "item_1",
             "desc": "item_1",
-            "group": "",
+            "group": "syn",
             "default": "",
             "type": "String",
-            "options": "",
-            "errors": []
+            "options": ""
         },
         {
             "name": "item_2",
             "desc": "item_2",
-            "group": "",
+            "group": "syn",
             "default": "",
             "type": "String",
-            "options": "",
-            "errors": []
+            "options": ""
         },
         {
             "name": "item_3",
             "desc": "item_3",
-            "group": "",
+            "group": "syn",
             "default": "",
             "type": "String",
-            "options": "",
-            "errors": []
+            "options": ""
         }
     ]
 }

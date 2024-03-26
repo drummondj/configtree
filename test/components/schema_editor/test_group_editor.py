@@ -20,11 +20,11 @@ def test_layout():
 
 
 def test_deleted_selected_callback():
-    selection = [{"name": "Synthesis"}]
+    selection = [{"name": "syn"}]
     assert deleted_selected(True, selection) == (
         False,
         True,
-        ["Clock Tree Synthesis", "Detail Route", "Fruit"],
+        ["cts", "drt", "fruit"],
     )
 
 
@@ -39,7 +39,7 @@ def test_add_group():
                 }
             ]
         },
-        ["Clock Tree Synthesis", "Detail Route", "Fruit", "<new group name>"],
+        ["cts", "drt", "fruit", "<new group name>"],
     )
 
 

@@ -127,7 +127,7 @@ def save(n_clicks: bool):
                 False,
                 False,
                 True,
-                [error.message for error in next_schema.get_errors()],
+                [html.Div(error.message) for error in next_schema.get_errors()],
             )
         else:
             schema = next_schema.copy()

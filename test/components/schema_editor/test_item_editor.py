@@ -30,7 +30,6 @@ def test_add_item():
                 "group": "",
                 "type": "String",
                 "options": "",
-                "errors": [],
             }
         ]
     }
@@ -41,21 +40,21 @@ def test_update():
         {
             "name": "item_1",
             "desc": "item_1",
-            "group": "",
+            "group": "syn",
             "default": "",
             "type": "String",
         },
         {
             "name": "item_2",
             "desc": "item_2",
-            "group": "",
+            "group": "syn",
             "default": "",
             "type": "String",
         },
         {
             "name": "item_3",
             "desc": "item_3",
-            "group": "",
+            "group": "syn",
             "default": "",
             "type": "String",
         },

@@ -13,15 +13,15 @@ from src.model.schema import (
 class TestSchemaValidationError:
     def test_init(self):
         schema_validation_error = SchemaValidationError(
-            "something went wrong", "row", "item", "col"
+            "something went wrong", "item", "row", "col"
         )
-        assert schema_validation_error.error == "something went wrong"
-        assert schema_validation_error.name == "row"
-        assert schema_validation_error.type == "item"
-        assert schema_validation_error.field == "col"
+        assert schema_validation_error.message == "something went wrong"
+        assert schema_validation_error.table == "item"
+        assert schema_validation_error.row == "row"
+        assert schema_validation_error.col == "col"
         assert (
-            schema_validation_error.message
-            == "something went wrong on item row 'row' and column 'col'"
+            str(schema_validation_error)
+            == "something went wrong (self.table = 'item' self.row = 'row' self.col = 'col')"
         )
 
 
@@ -89,11 +89,13 @@ class TestSchemaItem:
         assert len(schema_item.errors) == 0
 
     def test_validate(self):
+        parent = Schema("name", "desc", "0.1.0")
+        parent.groups.append(SchemaGroup("group", "test group"))
         schema_item = self.create_schema_item()
         schema_item.options = "one two three"
-        assert schema_item.validate()
+        assert schema_item.validate(parent)
         schema_item.default = "1.0"
-        assert not schema_item.validate()
+        assert not schema_item.validate(parent)
 
 
 class TestSchemaGroup:
@@ -126,21 +128,13 @@ class TestSchema:
         assert schema is not schema_copy
         assert schema == schema_copy
 
-    def test_eq(self):
-        schema = self.create_schema()
-        schema_copy = schema.copy()
-        assert schema.__eq__(schema_copy)
-        schema_copy.name = "new"
-        assert not schema.__eq__(schema_copy)
-        # TODO: add tests for other field updates in an elegant way
-
     def test_get_group_names(self):
         schema = self.create_schema()
         assert schema.get_group_names() == [
-            "Synthesis",
-            "Clock Tree Synthesis",
-            "Detail Route",
-            "Fruit",
+            "syn",
+            "cts",
+            "drt",
+            "fruit",
         ]
 
     def test_update(self):
@@ -162,14 +156,14 @@ class TestSchema:
 
         schema.version = "invalid_version"
         assert not schema.save(fn)
-        assert len(errors) == 1
+        assert len(schema.get_errors()) == 1
         assert not os.path.exists(fn)
 
         schema.items.append(
             SchemaItem("invalid", "invalid", "group", "default", SchemaItemType.int)
         )
         assert not schema.save(fn)
-        assert len(errors) == 2
+        assert len(schema.get_errors()) == 3
         assert not os.path.exists(fn)
 
     def test_get_errors(self):

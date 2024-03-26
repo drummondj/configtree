@@ -14,7 +14,6 @@ from src.components.schema_editor.schema_editor import (
     alerts,
     layout,
 )
-from src.model.schema import SchemaValidationError
 
 
 def test_set_if_valid():
@@ -70,14 +69,11 @@ def test_save_callback():
     assert save(True) == (True, True, False, [])
 
     schema_editor.next_schema.version = "not a version"
-    assert save(True) == (
-        False,
-        False,
-        True,
-        [
-            "invalid version number not a version on schema row 'test' and column 'version'"
-        ],
-    )
+    result = save(True)
+    assert not result[0]
+    assert not result[1]
+    assert result[2]
+    assert len(result[3]) == 1
 
     assert save(False) == (False, False, False, [])
 
