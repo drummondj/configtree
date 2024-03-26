@@ -1,3 +1,5 @@
+![Build Status](https://github.com/drummondj/configtree/actions/workflows/main.yml/badge.svg?subject=build)
+
 ConfigTree
 ==========
 
