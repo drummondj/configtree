@@ -52,18 +52,26 @@
         {
             "name": "oranges",
             "desc": "How many oranges do you want?",
-            "group": "test",
+            "group": "dtr",
             "default": "0",
             "type": "Integer",
             "options": ""
         },
         {
             "name": "timing_driven",
-            "desc": "Use timing driven optimization",
+            "desc": "Use timing driven optimization !!",
             "group": "syn",
             "default": "1",
             "type": "Boolean",
             "options": ""
+        },
+        {
+            "name": "test",
+            "desc": "Booleans can be true or false",
+            "group": "test",
+            "default": "false",
+            "type": "Boolean",
+            "options": "false true "
         }
     ]
 }
