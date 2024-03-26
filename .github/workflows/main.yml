@@ -10,7 +10,9 @@ jobs:
     steps:
     - name: checkout repo
       uses: actions/checkout@main
-    - name: Run tests
+    - name: install dependencies
+      run: pip install -r environment/requirements.txt
+    - name: run tests
       run: make test
     
   
