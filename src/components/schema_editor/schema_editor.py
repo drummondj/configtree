@@ -1,6 +1,6 @@
 from dash import html, callback, Input, Output
 import dash_bootstrap_components as dbc
-from src import schema as schema_factory
+from src.model import schema as schema_factory
 from src.helpers.form import basic_text_input
 from src.helpers.validators import (
     validate_not_blank,
@@ -123,7 +123,12 @@ def save(n_clicks: bool):
     global next_schema, schema
     if n_clicks:
         if not next_schema.save(filename):
-            return False, False, True, [error.message for error in next_schema.errors()]
+            return (
+                False,
+                False,
+                True,
+                [error.message for error in next_schema.get_errors()],
+            )
         else:
             schema = next_schema.copy()
             return True, True, False, []

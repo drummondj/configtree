@@ -65,7 +65,7 @@ def test_save_button():
 
 def test_save_callback():
     schema_editor.filename = "test/test_schema_editor.json"
-    print(schema_editor.next_schema.errors())
+    print(schema_editor.next_schema.get_errors())
     assert save(True) == (True, True, False, [])
     assert save(False) == (False, False, False, [])
 

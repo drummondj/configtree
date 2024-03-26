@@ -4,26 +4,31 @@
     "version": "0.1.2",
     "groups": [
         {
-            "name": "Synthesis",
+            "name": "syn",
             "desc": "Synthesis Options",
             "order": 0
         },
         {
-            "name": "Clock Tree Synthesis",
+            "name": "cts",
             "desc": "Clock Tree Synthesis Options",
             "order": 1
         },
         {
-            "name": "Detail Route",
+            "name": "dtr",
             "desc": "Detail Route Options",
             "order": 2
+        },
+        {
+            "name": "fruit",
+            "desc": "Choose some fruit",
+            "order": 3
         }
     ],
     "items": [
         {
             "name": "synthesis_effort",
             "desc": "Effort used during Synthesis step:\n\nlow = basic optimization\nmedium = additional optimization steps\nhigh = maximum effort and runtime",
-            "group": "Fruit",
+            "group": "fruit",
             "default": "low",
             "type": "String",
             "options": "low medium high",
@@ -32,7 +37,7 @@
         {
             "name": "bananas",
             "desc": "How many bananas do you want?",
-            "group": "Fruit",
+            "group": "fruit",
             "default": "1",
             "type": "Integer",
             "options": "0 100",

@@ -1,7 +1,6 @@
 """Schema dataclasses for modeling a schema"""
 
 from dataclasses import dataclass, field, replace
-from functools import reduce
 from typing import List, Any
 from enum import Enum
 from dataclass_wizard import JSONWizard
@@ -15,6 +14,7 @@ class SchemaValidationError:
         self.error = error
         self.name = name
         self.type = type
+        self.field = field
         self.message = f"{error} on {type} row '{name}' and column '{field}'"
 
 
@@ -99,6 +99,7 @@ class Schema(JSONWizard):
     version: str
     groups: List["SchemaGroup"] = field(default_factory=list)
     items: List["SchemaItem"] = field(default_factory=list)
+    errors: List["SchemaValidationError"] = field(default_factory=list)
 
     def copy(self) -> "Schema":
         return replace(self)
@@ -127,16 +128,27 @@ class Schema(JSONWizard):
 
     def validate(self) -> bool:
         passed = True
+        if not validators.validate_version_number(self.version):
+            self.errors.append(
+                SchemaValidationError(
+                    f"invalid version number {self.version}",
+                    self.name,
+                    "schema",
+                    "version",
+                )
+            )
+            passed = False
+
         for item in self.items:
             if not item.validate():
                 passed = False
         return passed
 
-    def errors(self) -> List[SchemaValidationError]:
-        errors = []
+    def get_errors(self) -> List[SchemaValidationError]:
+        all_errors = self.errors
         for item in self.items:
-            errors.extend(item.errors)
-        return errors
+            all_errors.extend(item.errors)
+        return all_errors
 
 
 def from_json(string: str) -> Schema:

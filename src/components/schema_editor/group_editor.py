@@ -1,7 +1,7 @@
 from dash import html, dcc, callback, Input, Output, State
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
-from src.schema import Schema, SchemaGroup
+from src.model.schema import Schema, SchemaGroup
 
 
 # ---------------------------------------------------------------------------------------------------

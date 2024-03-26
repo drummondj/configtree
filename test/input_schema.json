@@ -29,7 +29,7 @@
             "name": "synthesis_effort",
             "desc": "Effort used during Synthesis step:\n\nlow = basic optimization\nmedium = additional optimization steps\nhigh = maximum effort and runtime",
             "group": "Fruit",
-            "default": "1",
+            "default": "low",
             "type": "String",
             "options": "low medium high"
         },

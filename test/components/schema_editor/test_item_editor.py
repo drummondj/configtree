@@ -5,7 +5,7 @@ from src.components.schema_editor.item_editor import (
     update,
     group_name_changed,
 )
-import src.schema as schema
+import src.model.schema as schema
 from dash import html
 import src.components.schema_editor.schema_editor as schema_editor
 
