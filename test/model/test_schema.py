@@ -77,6 +77,22 @@ class TestSchemaItem:
         schema_item.__validate_field_type__("default", "not a float")
         assert len(schema_item.errors) == 1
 
+    def test_validate_name(self):
+        schema_item = self.create_schema_item()
+        schema_item.validate_name()
+        assert len(schema_item.errors) == 0
+        schema_item.name = ""
+        schema_item.validate_name()
+        assert len(schema_item.errors) == 1
+
+    def test_validate_desc(self):
+        schema_item = self.create_schema_item()
+        schema_item.validate_desc()
+        assert len(schema_item.errors) == 0
+        schema_item.desc = ""
+        schema_item.validate_desc()
+        assert len(schema_item.errors) == 1
+
     def test_validate_default(self):
         schema_item = self.create_schema_item()
         schema_item.validate_default()
@@ -99,11 +115,46 @@ class TestSchemaItem:
 
 
 class TestSchemaGroup:
+    def create_schema_group(self):
+        return SchemaGroup("name", "desc")
+
     def test_init(self):
-        schema_group = SchemaGroup("name", "desc")
+        schema_group = self.create_schema_group()
         assert schema_group.name == "name"
         assert schema_group.desc == "desc"
         assert schema_group.order == 0
+
+    def test_validate_name(self):
+        schema_group = self.create_schema_group()
+        schema_group.validate_name()
+        assert len(schema_group.errors) == 0
+        schema_group.name = ""
+        schema_group.validate_name()
+        assert len(schema_group.errors) == 1
+
+    def test_validate_desc(self):
+        schema_group = self.create_schema_group()
+        schema_group.validate_desc()
+        assert len(schema_group.errors) == 0
+        schema_group.desc = ""
+        schema_group.validate_desc()
+        assert len(schema_group.errors) == 1
+
+    def test_validate_order(self):
+        schema_group = self.create_schema_group()
+        schema_group.validate_order()
+        assert len(schema_group.errors) == 0
+        schema_group.order = ""  # type: ignore
+        schema_group.validate_order()
+        assert len(schema_group.errors) == 1
+
+    def test_validate(self):
+        schema_group = self.create_schema_group()
+        schema_group.validate()
+        assert len(schema_group.errors) == 0
+        schema_group.name = ""
+        schema_group.validate()
+        assert len(schema_group.errors) == 1
 
 
 class TestSchema:
@@ -166,12 +217,33 @@ class TestSchema:
         assert len(schema.get_errors()) == 3
         assert not os.path.exists(fn)
 
+        schema.groups.append(SchemaGroup("", "invalid"))
+        assert not schema.save(fn)
+        assert len(schema.get_errors()) == 4
+        assert not os.path.exists(fn)
+
     def test_get_errors(self):
         schema = self.create_schema()
         assert schema.get_errors() == []
         error = SchemaValidationError("error", "name", "type", "field")
         schema.errors.append(error)
         assert schema.get_errors() == [error]
+
+    def test_validate_name(self):
+        schema = self.create_schema()
+        schema.validate_name()
+        assert len(schema.errors) == 0
+        schema.name = ""
+        schema.validate_name()
+        assert len(schema.errors) == 1
+
+    def test_validate_desc(self):
+        schema = self.create_schema()
+        schema.validate_desc()
+        assert len(schema.get_errors()) == 0
+        schema.desc = ""
+        schema.validate_desc()
+        assert len(schema.get_errors()) == 1
 
 
 def test_from_json():

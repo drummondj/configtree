@@ -238,7 +238,7 @@ class Schema(JSONWizard):
         return True
 
     def validate_desc(self) -> bool:
-        if not validators.validate_not_blank(self.name):
+        if not validators.validate_not_blank(self.desc):
             self.errors.append(
                 SchemaValidationError(
                     f"Schema {self.name} invalid description, must not be blank",
@@ -254,13 +254,11 @@ class Schema(JSONWizard):
         self.errors = []
         passed = True
 
-        if not self.validate_name():
-            passed = False
-
-        if not self.validate_desc():
-            passed = False
-
-        if not self.validate_version():
+        if (
+            not self.validate_name()
+            or not self.validate_desc()
+            or not self.validate_version()
+        ):
             passed = False
 
         for item in self.items:
