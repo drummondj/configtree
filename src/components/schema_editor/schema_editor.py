@@ -123,11 +123,19 @@ def save(n_clicks: bool):
     global next_schema, schema
     if n_clicks:
         if not next_schema.save(filename):
+            alert = html.Div(
+                [html.I(className="bi bi-exclamation-triangle me-2 error-icon")]
+                + [
+                    html.Div(className="error-message", children=error.message)
+                    for error in next_schema.get_errors()
+                ]
+            )
+
             return (
                 False,
                 False,
                 True,
-                [html.Div(error.message) for error in next_schema.get_errors()],
+                alert,
             )
         else:
             schema = next_schema.copy()
@@ -140,13 +148,19 @@ def alerts() -> html.Div:
     return html.Div(
         [
             dbc.Alert(
-                f"Schema saved successfully to {filename}",
+                [
+                    html.I(className="bi bi-check-circle me-2"),
+                    f"Schema saved successfully to {filename}",
+                ],
                 id="alert-auto",
                 is_open=False,
                 duration=4000,
             ),
             dbc.Alert(
-                "Error saving Schema",
+                [
+                    html.I(className="bi bi-exclamation-triangle me-2"),
+                    "Error saving Schema",
+                ],
                 id="alert-error",
                 is_open=False,
                 color="danger",

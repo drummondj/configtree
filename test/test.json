@@ -71,7 +71,7 @@
             "group": "test",
             "default": "false",
             "type": "Boolean",
-            "options": "false true "
+            "options": ""
         }
     ]
 }

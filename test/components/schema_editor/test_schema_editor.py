@@ -73,7 +73,8 @@ def test_save_callback():
     assert not result[0]
     assert not result[1]
     assert result[2]
-    assert len(result[3]) == 1
+    print(result[3])
+    assert len(result[3]) == 3
 
     assert save(False) == (False, False, False, [])
 

@@ -30,3 +30,11 @@
     padding: 2px;
     border-bottom: 1px solid #bbb;
 }
+
+.error-message {
+    margin-left: 30px;
+}
+
+.error-icon {
+    float: left;
+}

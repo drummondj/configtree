@@ -62,7 +62,7 @@ class SchemaItem(JSONWizard):
         if type_error:
             self.errors.append(
                 SchemaValidationError(
-                    f"Item {self.name} column '{col}' value '{value}' is not a {type_error}",
+                    f"Item {self.name} column '{col}': value '{value}' is not a {type_error}",
                     "item",
                     self.name,
                     col,
@@ -215,7 +215,7 @@ class Schema(JSONWizard):
         if not validators.validate_version_number(self.version):
             self.errors.append(
                 SchemaValidationError(
-                    f"Schema version number {self.version} must be formated as x.y.z",
+                    f"Schema version number '{self.version}' must be formated as x.y.z",
                     "schema",
                     self.name,
                     "version",
