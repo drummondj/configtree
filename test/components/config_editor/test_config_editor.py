@@ -1,3 +1,4 @@
+import os
 from test.mocking.config import MOCK_CONFIG
 
 import dash_bootstrap_components as dbc
@@ -92,6 +93,8 @@ def test_alerts() -> None:
 
 def test_layout() -> None:
     assert "File missing.json does not exist" in str(layout("missing.json"))
+    if not os.path.exists("test/temp"):
+        os.mkdir("test/temp")
     CONFIG_FILENAME = "test/temp/config.json"
     MOCK_CONFIG.save(CONFIG_FILENAME)
     assert isinstance(layout(CONFIG_FILENAME), dbc.Form)
