@@ -1,5 +1,5 @@
 ![Build Status](https://github.com/drummondj/configtree/actions/workflows/main.yml/badge.svg?subject=build)
-![Coverage](https://github.com/drummondj/configtree/coverage.svg)
+![Coverage](coverage.svg)
 
 ConfigTree
 ==========
