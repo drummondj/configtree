@@ -6,4 +6,5 @@ dash_extensions
 dash-ag-grid
 dash[testing]
 coverage
+coverage-badge
 
