@@ -1,0 +1,18 @@
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  test:
+    name: Run all tests
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@main
+    - name: install dependencies
+      run: pip install -r environment/requirements.txt
+    - name: run tests
+      run: make test
+    
+  
