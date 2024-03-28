@@ -1,7 +1,7 @@
 {
     "name": "name",
     "desc": "desc",
-    "version": "0.0.0",
-    "groups": [],
+    "schemaPath": "schema_path",
+    "schema": null,
     "items": []
 }

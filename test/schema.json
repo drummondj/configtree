@@ -1,7 +1,7 @@
 {
     "name": "chip_implementation_schema",
     "desc": "This schema is used to configure all physical implemention stages",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "groups": [
         {
             "name": "syn",
@@ -20,14 +20,14 @@
         },
         {
             "name": "test",
-            "desc": "<add description here>",
-            "order": 3
+            "desc": "* markdown test",
+            "order": 2
         }
     ],
     "items": [
         {
             "name": "synthesis_effort",
-            "desc": "Effort used during Synthesis step:\n\nlow = basic optimization\nmedium = additional optimization steps\nhigh = maximum effort and runtime",
+            "desc": "Effort used during Synthesis step:\n\n* low = basic optimization\n* medium = additional optimization steps\n* high = maximum effort and runtime",
             "group": "syn",
             "default": "low",
             "type": "String",
@@ -35,7 +35,7 @@
         },
         {
             "name": "bananas",
-            "desc": "How many bananas do you want?",
+            "desc": "How many bananas do you want?\n\n```\nbananas = monkey.count() * 100\n```",
             "group": "test",
             "default": "1",
             "type": "Integer",
@@ -69,8 +69,8 @@
             "name": "test",
             "desc": "Booleans can be true or false",
             "group": "test",
-            "default": "false",
-            "type": "Boolean",
+            "default": "1",
+            "type": "Integer",
             "options": ""
         }
     ]

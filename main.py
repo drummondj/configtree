@@ -5,6 +5,10 @@ import dash_bootstrap_components as dbc
 
 from src.components import layout
 
+BOOTSTRAP_ICONS = (
+    "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/" "font/bootstrap-icons.css"
+)
+
 
 def main() -> None:
     app = Dash(
@@ -13,7 +17,7 @@ def main() -> None:
         external_stylesheets=[
             "./assets/stle.css",
             dbc.themes.BOOTSTRAP,
-            dbc.icons.BOOTSTRAP,
+            BOOTSTRAP_ICONS,
         ],
         suppress_callback_exceptions=True,
     )

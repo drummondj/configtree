@@ -1,22 +1,25 @@
-from src.components.schema_editor.item_editor import (
-    layout,
-    deleted_selected,
-    add_item,
-    update,
-    group_name_changed,
-)
-import src.model.schema as schema
+from test.mocking.schema import MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS
+
 from dash import html
-import src.components.schema_editor.schema_editor as schema_editor
+
+from src.app_state import Root
+from src.components.schema_editor.item_editor import (
+    add_item,
+    deleted_selected,
+    group_name_changed,
+    layout,
+    update,
+)
 
 
 def test_layout():
-    schema_editor.next_schema = schema.load("test/input_schema.json")
-    assert isinstance(layout(schema_editor.next_schema), html.Div)
+    Root.next_schema = MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS.copy()
+    assert isinstance(layout(Root.next_schema), html.Div)
 
 
 def test_deleted_selected_callback():
-    selection = [{"name": "synthesis_effort"}]
+    Root.next_schema = MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS.copy()
+    selection = [{"name": "name0"}]
     assert deleted_selected(True, selection) == (False, True)
 
 
@@ -36,6 +39,7 @@ def test_add_item():
 
 
 def test_update():
+    Root.next_schema = MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS.copy()
     new_rows = [
         {
             "name": "item_1",

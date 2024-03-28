@@ -1,7 +1,9 @@
-from dash import html, dcc, callback, Input, Output, State
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
-from src.model.schema import Schema, SchemaGroup
+from dash import Input, Output, State, callback, dcc, html
+
+from src.app_state import Root
+from src.model.schema import SchemaGroup
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -14,9 +16,10 @@ def group_names_store():
 # ---------------------------------------------------------------------------------------------------
 # Group Editor
 # ---------------------------------------------------------------------------------------------------
-def layout(schema: Schema) -> html.Div:
-    global next_schema
-    next_schema = schema
+def layout() -> html.Div:
+    if Root.next_schema is None:
+        return html.Div("Schema loading, please wait ...")
+
     columnDefs = [
         {
             "field": "name",
@@ -46,10 +49,12 @@ def layout(schema: Schema) -> html.Div:
             "flex": 8,
             "cellEditorPopup": True,
             "cellEditor": "agLargeTextCellEditor",
+            "cellRenderer": "markdown",
+            "autoHeight": True,
         },
     ]
     rowData = []
-    for group in next_schema.groups:
+    for group in Root.next_schema.groups:
         rowData.append(group.to_dict())
 
     grid = dag.AgGrid(
@@ -108,11 +113,14 @@ def layout(schema: Schema) -> html.Div:
     prevent_initial_call=True,
 )
 def deleted_selected(n_clicks, selection):
+    if Root.next_schema is None:
+        return True, False, []
+
     for row in selection:
-        for group in next_schema.groups:
+        for group in Root.next_schema.groups:
             if group.name == row["name"]:
-                next_schema.groups.remove(group)
-    return False, True, next_schema.get_group_names()
+                Root.next_schema.groups.remove(group)
+    return False, True, Root.next_schema.get_group_names()
 
 
 @callback(
@@ -123,9 +131,11 @@ def deleted_selected(n_clicks, selection):
 )
 def add_group(_):
     """Adds an empty group to the top of the table"""
+    if Root.next_schema is None:
+        return {}, []
     group = SchemaGroup(name="<new group name>", desc="<add description here>")
-    next_schema.groups.append(group)
-    return {"add": [group.to_dict()]}, next_schema.get_group_names()
+    Root.next_schema.groups.append(group)
+    return {"add": [group.to_dict()]}, Root.next_schema.get_group_names()
 
 
 @callback(
@@ -140,7 +150,9 @@ def add_group(_):
     prevent_initial_call=True,
 )
 def update(_, rows):
-    next_schema.groups.clear()
+    if Root.next_schema is None:
+        return True, []
+    Root.next_schema.groups.clear()
     for row in rows:
-        next_schema.groups.append(SchemaGroup.from_dict(row))
-    return False, next_schema.get_group_names()
+        Root.next_schema.groups.append(SchemaGroup.from_dict(row))
+    return False, Root.next_schema.get_group_names()

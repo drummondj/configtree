@@ -1,12 +1,14 @@
 """Schema dataclasses for modeling a schema"""
 
-from dataclasses import dataclass, field, replace
-from typing import List, Any
-from enum import Enum
-from dataclass_wizard import JSONWizard, json_field
 import json
-import src.helpers.validators as validators
 from copy import deepcopy
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, List
+
+from dataclass_wizard import JSONWizard, json_field
+
+import src.helpers.validators as validators
 
 
 @dataclass
@@ -200,9 +202,6 @@ class Schema(JSONWizard):
     def get_group_names(self) -> List[str]:
         return [group.name for group in self.groups]
 
-    def update(self, name: str, value: Any):
-        setattr(self, name, value)
-
     def save(self, filename) -> bool:
         if self.validate():
             with open(filename, "w") as f:
@@ -252,23 +251,18 @@ class Schema(JSONWizard):
 
     def validate(self) -> bool:
         self.errors = []
-        passed = True
-
-        if (
-            not self.validate_name()
-            or not self.validate_desc()
-            or not self.validate_version()
-        ):
-            passed = False
-
+        self.validate_name()
+        self.validate_desc()
+        self.validate_version()
         for item in self.items:
-            if not item.validate(self):
-                passed = False
+            item.validate(self)
 
         for group in self.groups:
-            if not group.validate():
-                passed = False
-        return passed
+            group.validate()
+
+        print(self.errors)
+
+        return len(self.errors) == 0
 
     def get_errors(self) -> List[SchemaValidationError]:
         all_errors = self.errors.copy()

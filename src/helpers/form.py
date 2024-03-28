@@ -1,5 +1,7 @@
 """A few helpers to clean up form creation"""
 
+from typing import Any, Callable
+
 import dash_bootstrap_components as dbc
 
 
@@ -28,3 +30,15 @@ def basic_text_input(
         ],
         className="mb-3",
     )
+
+
+def set_if_valid(
+    object: object, attribute: str, value: Any, validator: Callable[[Any], bool]
+) -> bool:
+    """Set's a dataclass attribute if valid, returns True if validation passes"""
+
+    if validator(value):
+        setattr(object, attribute, value)
+        return True
+    else:
+        return False

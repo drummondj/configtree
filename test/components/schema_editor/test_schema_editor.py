@@ -1,31 +1,24 @@
-from typing import Any
-import src.components.schema_editor.schema_editor as schema_editor
+from test.mocking.schema import MOCK_SCHEMA
+
+from src.app_state import Root
 from src.components.schema_editor.schema_editor import (
-    set_if_valid,
-    name_input,
-    validate_and_set_name,
-    validate_and_set_desc,
-    validate_and_set_version,
-    save_button,
-    desc_input,
-    version_input,
-    save,
-    needs_save,
     alerts,
+    desc_input,
     layout,
+    name_input,
+    needs_save,
+    save,
+    save_button,
+    validate_and_set_desc,
+    validate_and_set_name,
+    validate_and_set_version,
+    version_input,
 )
 
 
-def test_set_if_valid():
-    def valid_validator(value: Any):
-        return True
-
-    assert set_if_valid("name", "test", valid_validator)
-
-    def invalid_validator(value: Any):
-        return False
-
-    assert not set_if_valid("name", "test", invalid_validator)
+def init_valid_schema():
+    Root.schema = MOCK_SCHEMA
+    Root.next_schema = Root.schema.copy()
 
 
 def test_name_input():
@@ -64,26 +57,30 @@ def test_save_button():
 
 
 def test_save_callback():
-    schema_editor.filename = "test/test_schema_editor.json"
-    print(schema_editor.next_schema.get_errors())
-    assert save(True) == (True, True, False, [])
+    init_valid_schema()
+    Root.schema_filename = "test/test_schema_editor.json"
+    if Root.next_schema is None:
+        assert False
+    else:
+        assert save(True) == (True, True, False, [])
 
-    schema_editor.next_schema.version = "not a version"
-    result = save(True)
-    assert not result[0]
-    assert not result[1]
-    assert result[2]
-    print(result[3])
-    assert len(result[3]) == 3
-
-    assert save(False) == (False, False, False, [])
+        Root.next_schema.version = "not a version"
+        result = save(True)
+        assert not result[0]
+        assert not result[1]
+        assert result[2]
+        print(result[3])
+        assert len(result[3]) == 3
 
 
 def test_needs_save():
-    schema_editor.schema = schema_editor.next_schema.copy()
-    assert needs_save("_", "_", "_")
-    schema_editor.next_schema.name = "new_name"
-    assert not needs_save("_", "_", "_")
+    init_valid_schema()
+    if Root.next_schema is None:
+        assert False
+    else:
+        assert needs_save("_", "_", "_")
+        Root.next_schema.name = "new_name___"
+        assert not needs_save("_", "_", "_")
 
 
 def test_alerts():

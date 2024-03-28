@@ -20,7 +20,8 @@
     border-right: 1px solid #bbb;
 }
 
-.toolbar>.btn {
+.toolbar>.btn,
+.no-border-toolbar>.btn {
     margin: 2px;
 }
 

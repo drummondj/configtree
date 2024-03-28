@@ -1,52 +1,47 @@
 {
-    "name": "chip_implementation_schema",
-    "desc": "This schema is used to configure all physical implemention stages",
-    "version": "0.1.2",
+    "name": "name",
+    "desc": "desc",
+    "version": "0.0.0",
     "groups": [
         {
-            "name": "syn",
-            "desc": "Synthesis Options",
+            "name": "name0",
+            "desc": "desc0",
             "order": 0
         },
         {
-            "name": "cts",
-            "desc": "Clock Tree Synthesis Options",
-            "order": 1
+            "name": "name1",
+            "desc": "desc1",
+            "order": 0
         },
         {
-            "name": "drt",
-            "desc": "Detail Route Options",
-            "order": 2
-        },
-        {
-            "name": "fruit",
-            "desc": "Choose some fruit quantities",
-            "order": 3
+            "name": "name2",
+            "desc": "desc2",
+            "order": 0
         }
     ],
     "items": [
         {
-            "name": "synthesis_effort",
-            "desc": "Effort used during Synthesis step:\n\nlow = basic optimization\nmedium = additional optimization steps\nhigh = maximum effort and runtime",
-            "group": "fruit",
-            "default": "low",
+            "name": "name0",
+            "desc": "desc0",
+            "group": "name0",
+            "default": "",
             "type": "String",
-            "options": "low medium high"
-        },
-        {
-            "name": "bananas",
-            "desc": "How many bananas do you want?",
-            "group": "fruit",
-            "default": "0",
-            "type": "Integer",
             "options": ""
         },
         {
-            "name": "apples",
-            "desc": "How many apples do you want?",
-            "group": "fruit",
-            "default": "0",
-            "type": "Integer",
+            "name": "name1",
+            "desc": "desc1",
+            "group": "name1",
+            "default": "",
+            "type": "String",
+            "options": ""
+        },
+        {
+            "name": "name2",
+            "desc": "desc2",
+            "group": "name2",
+            "default": "",
+            "type": "String",
             "options": ""
         }
     ]

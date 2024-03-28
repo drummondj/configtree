@@ -1,18 +1,12 @@
-from typing import Literal
-
 import dash_bootstrap_components as dbc
 from dash import Input, Output, callback, html
 
 from src.app_state import Root
 from src.helpers.form import basic_text_input, set_if_valid
-from src.helpers.validators import (
-    validate_alpha_num,
-    validate_not_blank,
-    validate_version_number,
-)
-from src.model import schema as schema_factory
+from src.helpers.validators import validate_alpha_num, validate_not_blank
+from src.model import config as config_factory
 
-from . import group_editor, item_editor
+from . import item_editor
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -21,19 +15,19 @@ from . import group_editor, item_editor
 def name_input(value: str) -> dbc.Row:
     return basic_text_input(
         "Name",
-        "name",
-        "Enter schema name",
+        "config-name",
+        "Enter config name",
         "Name must not be empty and contain only a-z, A-Z, 0-9, and _",
         value,
     )
 
 
 @callback(
-    Output("name", "invalid"),
-    Input("name", "value"),
+    Output("config-name", "invalid"),
+    Input("config-name", "value"),
 )
 def validate_and_set_name(text: str) -> bool:
-    return not set_if_valid(Root.next_schema, "name", text, validate_alpha_num)
+    return not set_if_valid(Root.next_config, "name", text, validate_alpha_num)
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -42,40 +36,19 @@ def validate_and_set_name(text: str) -> bool:
 def desc_input(value: str) -> dbc.Row:
     return basic_text_input(
         "Description",
-        "desc",
-        "Enter schema description",
+        "config-desc",
+        "Enter config description",
         "Description must not be empty",
         value,
     )
 
 
 @callback(
-    Output("desc", "invalid"),
-    Input("desc", "value"),
+    Output("config-desc", "invalid"),
+    Input("config-desc", "value"),
 )
 def validate_and_set_desc(text: str) -> bool:
-    return not set_if_valid(Root.next_schema, "desc", text, validate_not_blank)
-
-
-# ---------------------------------------------------------------------------------------------------
-# Version Input
-# ---------------------------------------------------------------------------------------------------
-def version_input(value: str) -> dbc.Row:
-    return basic_text_input(
-        "Version",
-        "version",
-        "Version number in x.y.z format",
-        "Version must be in x.y.z format",
-        value,
-    )
-
-
-@callback(
-    Output("version", "invalid"),
-    Input("version", "value"),
-)
-def validate_and_set_version(text: str) -> bool:
-    return not set_if_valid(Root.next_schema, "version", text, validate_version_number)
+    return not set_if_valid(Root.next_config, "desc", text, validate_not_blank)
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -86,26 +59,22 @@ def save_button() -> html.Div:
         className="no-border-toolbar",
         children=[
             dbc.Button(
-                " Save", id="save-button", disabled=True, className="bi bi-floppy"
-            ),
-            dbc.Button(
-                " Export Config",
-                id="export-config-button",
-                className="bi bi-arrow-right-square",
-                color="dark",
-                outline=True,
+                " Save",
+                id="config-save-button",
+                disabled=True,
+                className="bi bi-floppy",
             ),
         ],
     )
 
 
 @callback(
-    Output("save-button", "disabled"),
-    [Input("name", "value"), Input("desc", "value"), Input("version", "value")],
+    Output("config-save-button", "disabled"),
+    [Input("config-name", "value"), Input("config-desc", "value")],
     prevent_initial_call=True,
 )
-def needs_save(name: str, desc: str, value: str) -> bool:
-    if Root.schema == Root.next_schema:
+def needs_save(name: str, desc: str) -> bool:
+    if Root.config == Root.next_config:
         return True
     else:
         return False
@@ -113,22 +82,22 @@ def needs_save(name: str, desc: str, value: str) -> bool:
 
 @callback(
     Output(
-        "save-button",
+        "config-save-button",
         "disabled",
         allow_duplicate=True,
     ),
-    Output("alert-auto", "is_open"),
-    Output("alert-error", "is_open"),
-    Output("alert-error", "children"),
-    Input("save-button", "n_clicks"),
+    Output("config-alert-auto", "is_open"),
+    Output("config-alert-error", "is_open"),
+    Output("config-alert-error", "children"),
+    Input("config-save-button", "n_clicks"),
     prevent_initial_call=True,
 )
 def save(n_clicks: bool):
-    if Root.schema_filename is None:
+    if Root.config_filename is None:
         alert = html.Div(
             [
                 html.I(className="bi bi-exclamation-triangle me-2 error-icon"),
-                "Schema filename not set",
+                "Config filename not set",
             ]
         )
 
@@ -139,11 +108,11 @@ def save(n_clicks: bool):
             alert,
         )
 
-    if Root.next_schema is None:
+    if Root.next_config is None:
         alert = html.Div(
             [
                 html.I(className="bi bi-exclamation-triangle me-2 error-icon"),
-                "Schema not loaded",
+                "Config not loaded",
             ]
         )
 
@@ -154,41 +123,24 @@ def save(n_clicks: bool):
             alert,
         )
 
-    if n_clicks:
-        if not Root.next_schema.save(Root.schema_filename):
-            alert = html.Div(
-                [html.I(className="bi bi-exclamation-triangle me-2 error-icon")]
-                + [
-                    html.Div(className="error-message", children=error.message)
-                    for error in Root.next_schema.get_errors()
-                ]
-            )
+    if not Root.next_config.save(Root.config_filename):
+        alert = html.Div(
+            [html.I(className="bi bi-exclamation-triangle me-2 error-icon")]
+            + [
+                html.Div(className="error-message", children=error.message)
+                for error in Root.next_config.get_errors()
+            ]
+        )
 
-            return (
-                False,
-                False,
-                True,
-                alert,
-            )
-        else:
-            Root.schema = Root.next_schema.copy()
-            return True, True, False, []
+        return (
+            False,
+            False,
+            True,
+            alert,
+        )
     else:
-        return False, False, False, []
-
-
-@callback(Output("export-config-button", "disabled"), Input("save-button", "disabled"))
-def disable_export_config_button(save_button_state: bool):
-    return not save_button_state
-
-
-@callback(
-    Output("alert-export", "is_open"),
-    Input("export-config-button", "n_clicks"),
-    prevent_initial_call=True,
-)
-def export(n_clicks: bool) -> Literal[True]:
-    return True
+        Root.config = Root.next_config.copy()
+        return True, True, False, []
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -200,9 +152,9 @@ def alerts() -> html.Div:
             dbc.Alert(
                 [
                     html.I(className="bi bi-check-circle me-2"),
-                    f"Schema saved successfully to {Root.schema_filename}",
+                    f"Schema saved successfully to {Root.config_filename}",
                 ],
-                id="alert-auto",
+                id="config-alert-auto",
                 is_open=False,
                 duration=4000,
             ),
@@ -211,7 +163,7 @@ def alerts() -> html.Div:
                     html.I(className="bi bi-exclamation-triangle me-2"),
                     "Error saving Schema",
                 ],
-                id="alert-error",
+                id="config-alert-error",
                 is_open=False,
                 color="danger",
             ),
@@ -220,7 +172,7 @@ def alerts() -> html.Div:
                     html.I(className="bi bi-check-circle me-2"),
                     "Schema exported",
                 ],
-                id="alert-export",
+                id="config-alert-export",
                 is_open=False,
                 duration=4000,
             ),
@@ -232,31 +184,28 @@ def alerts() -> html.Div:
 # Main Page Layout
 # ---------------------------------------------------------------------------------------------------
 def layout(fn: str) -> dbc.Form:
-    Root.schema_filename = fn
+    Root.config_filename = fn
     try:
-        Root.schema = schema_factory.load(Root.schema_filename)
+        Root.config = config_factory.load(Root.config_filename)
     except FileNotFoundError:
         return dbc.Form(
             dbc.Alert(
                 [
                     html.I(className="bi bi-exclamation-triangle-fill me-2"),
-                    f"File {Root.schema_filename} does not exist",
+                    f"File {Root.config_filename} does not exist",
                 ],
                 color="danger",
             )
         )
 
-    Root.next_schema = Root.schema.copy()
+    Root.next_config = Root.config.copy()
 
     return dbc.Form(
         [
-            html.H2("Schema Editor"),
-            name_input(Root.next_schema.name),
-            desc_input(Root.next_schema.desc),
-            version_input(Root.next_schema.version),
-            group_editor.layout(),
-            html.Br(),
-            item_editor.layout(Root.next_schema),
+            html.H2("Config Editor"),
+            name_input(Root.next_config.name),
+            desc_input(Root.next_config.desc),
+            item_editor.layout(),
             html.Br(),
             save_button(),
             html.Br(),

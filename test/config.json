@@ -1,0 +1,88 @@
+{
+    "name": "name",
+    "desc": "desc",
+    "schemaPath": "test/input_schema.json",
+    "schema": {
+        "name": "name",
+        "desc": "desc",
+        "version": "0.0.0",
+        "groups": [
+            {
+                "name": "name0",
+                "desc": "desc0",
+                "order": 0
+            },
+            {
+                "name": "name1",
+                "desc": "desc1",
+                "order": 0
+            },
+            {
+                "name": "name2",
+                "desc": "desc2",
+                "order": 0
+            }
+        ],
+        "items": [
+            {
+                "name": "name0",
+                "desc": "desc0",
+                "group": "name0",
+                "default": "",
+                "type": "String",
+                "options": ""
+            },
+            {
+                "name": "name1",
+                "desc": "desc1",
+                "group": "name1",
+                "default": "",
+                "type": "String",
+                "options": ""
+            },
+            {
+                "name": "name2",
+                "desc": "desc2",
+                "group": "name2",
+                "default": "",
+                "type": "String",
+                "options": ""
+            }
+        ]
+    },
+    "items": [
+        {
+            "schemaItem": {
+                "name": "name0",
+                "desc": "desc0",
+                "group": "name0",
+                "default": "",
+                "type": "String",
+                "options": ""
+            },
+            "value": ""
+        },
+        {
+            "schemaItem": {
+                "name": "name1",
+                "desc": "desc1",
+                "group": "name1",
+                "default": "",
+                "type": "String",
+                "options": ""
+            },
+            "value": ""
+        },
+        {
+            "schemaItem": {
+                "name": "name2",
+                "desc": "desc2",
+                "group": "name2",
+                "default": "",
+                "type": "String",
+                "options": ""
+            },
+            "value": ""
+        }
+    ]
+}

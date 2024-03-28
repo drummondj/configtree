@@ -1,12 +1,13 @@
 import os
-import src.model.schema as schema_factory
+from test.mocking.schema import MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS
 
+import src.model.schema as schema_factory
 from src.model.schema import (
-    SchemaValidationError,
-    SchemaItemType,
-    SchemaItem,
-    SchemaGroup,
     Schema,
+    SchemaGroup,
+    SchemaItem,
+    SchemaItemType,
+    SchemaValidationError,
 )
 
 
@@ -159,18 +160,15 @@ class TestSchemaGroup:
 
 class TestSchema:
     def create_schema(self):
-        return schema_factory.load("test/input_schema.json")
+        return MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS.copy()
 
     def test_init(self):
         schema = self.create_schema()
         assert isinstance(schema, Schema)
-        assert schema.name == "chip_implementation_schema"
-        assert (
-            schema.desc
-            == "This schema is used to configure all physical implemention stages"
-        )
-        assert schema.version == "0.1.2"
-        assert len(schema.groups) == 4
+        assert schema.name == "name"
+        assert schema.desc == "desc"
+        assert schema.version == "0.0.0"
+        assert len(schema.groups) == 3
         assert len(schema.items) == 3
 
     def test_copy(self):
@@ -182,17 +180,10 @@ class TestSchema:
     def test_get_group_names(self):
         schema = self.create_schema()
         assert schema.get_group_names() == [
-            "syn",
-            "cts",
-            "drt",
-            "fruit",
+            "name0",
+            "name1",
+            "name2",
         ]
-
-    def test_update(self):
-        schema = self.create_schema()
-        assert schema.name == "chip_implementation_schema"
-        schema.update("name", "new")
-        assert schema.name == "new"
 
     def test_save(self):
         schema = self.create_schema()
@@ -247,9 +238,7 @@ class TestSchema:
 
 
 def test_from_json():
-    with open("test/input_schema.json") as f:
-        json_data = f.read()
-
+    json_data = MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS.to_json()
     schema = schema_factory.from_json(json_data)
     assert isinstance(schema, Schema)
 
@@ -258,5 +247,6 @@ def test_from_json():
 
 
 def test_load():
+    assert MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS.save("test/input_schema.json")
     schema = schema_factory.load("test/input_schema.json")
     assert isinstance(schema, Schema)

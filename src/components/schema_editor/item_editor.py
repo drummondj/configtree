@@ -1,13 +1,15 @@
-from dash import html, callback, Input, Output, State
+import json
+
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
+from dash import Input, Output, State, callback, html
+
+from src.app_state import Root
 from src.model.schema import Schema, SchemaItem, SchemaItemType
-import json
 
 
 def layout(schema: Schema) -> html.Div:
-    global next_schema
-    next_schema = schema
+    Root.next_schema = schema
     columnDefs = [
         {
             "field": "name",
@@ -48,6 +50,8 @@ def layout(schema: Schema) -> html.Div:
         {
             "field": "desc",
             "headerName": "Description",
+            "cellRenderer": "markdown",
+            "autoHeight": True,
             "editable": True,
             "cellEditorPopup": True,
             "cellEditor": "agLargeTextCellEditor",
@@ -55,7 +59,7 @@ def layout(schema: Schema) -> html.Div:
         },
     ]
     rowData = []
-    for group in next_schema.items:
+    for group in Root.next_schema.items:
         rowData.append(group.to_dict())
 
     grid = dag.AgGrid(
@@ -98,7 +102,7 @@ def layout(schema: Schema) -> html.Div:
             ),
             html.Div(
                 id="group-names-options",
-                children=json.dumps(next_schema.get_group_names()),
+                children=json.dumps(Root.next_schema.get_group_names()),
                 hidden=True,
             ),
         ]
@@ -117,10 +121,11 @@ def layout(schema: Schema) -> html.Div:
     prevent_initial_call=True,
 )
 def deleted_selected(n_clicks, selection):
-    for row in selection:
-        for item in next_schema.items:
-            if item.name == row["name"]:
-                next_schema.items.remove(item)
+    if Root.next_schema is not None:
+        for row in selection:
+            for item in Root.next_schema.items:
+                if item.name == row["name"]:
+                    Root.next_schema.items.remove(item)
     return False, True
 
 
@@ -131,17 +136,20 @@ def deleted_selected(n_clicks, selection):
 )
 def add_item(_):
     """Adds an empty item to the top of the table"""
-    item = SchemaItem(
-        name="<new item name>",
-        desc="<add description here>",
-        group="",
-        default=None,
-        type=SchemaItemType.str,
-    )
-    next_schema.items.append(item)
-    return {
-        "add": [item.to_dict()],
-    }
+    if Root.next_schema is not None:
+        item = SchemaItem(
+            name="<new item name>",
+            desc="<add description here>",
+            group="",
+            default=None,
+            type=SchemaItemType.str,
+        )
+        Root.next_schema.items.append(item)
+        return {
+            "add": [item.to_dict()],
+        }
+    else:
+        return {}
 
 
 @callback(
@@ -155,9 +163,10 @@ def add_item(_):
     prevent_initial_call=True,
 )
 def update(_, rows):
-    next_schema.items.clear()
-    for row in rows:
-        next_schema.items.append(SchemaItem.from_dict(row))
+    if Root.next_schema is not None:
+        Root.next_schema.items.clear()
+        for row in rows:
+            Root.next_schema.items.append(SchemaItem.from_dict(row))
     return False
 
 
