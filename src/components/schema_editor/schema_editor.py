@@ -1,3 +1,5 @@
+import tkinter as tk
+from tkinter import filedialog
 from typing import Literal
 
 import dash_bootstrap_components as dbc
@@ -10,6 +12,7 @@ from src.helpers.validators import (
     validate_not_blank,
     validate_version_number,
 )
+from src.model import config as config_factory
 from src.model import schema as schema_factory
 
 from . import group_editor, item_editor
@@ -79,7 +82,7 @@ def validate_and_set_version(text: str) -> bool:
 
 
 # ---------------------------------------------------------------------------------------------------
-# Save Buttons
+# Save & Export Buttons
 # ---------------------------------------------------------------------------------------------------
 def save_button() -> html.Div:
     return html.Div(
@@ -154,27 +157,24 @@ def save(n_clicks: bool):
             alert,
         )
 
-    if n_clicks:
-        if not Root.next_schema.save(Root.schema_filename):
-            alert = html.Div(
-                [html.I(className="bi bi-exclamation-triangle me-2 error-icon")]
-                + [
-                    html.Div(className="error-message", children=error.message)
-                    for error in Root.next_schema.get_errors()
-                ]
-            )
+    if not Root.next_schema.save(Root.schema_filename):
+        alert = html.Div(
+            [html.I(className="bi bi-exclamation-triangle me-2 error-icon")]
+            + [
+                html.Div(className="error-message", children=error.message)
+                for error in Root.next_schema.get_errors()
+            ]
+        )
 
-            return (
-                False,
-                False,
-                True,
-                alert,
-            )
-        else:
-            Root.schema = Root.next_schema.copy()
-            return True, True, False, []
+        return (
+            False,
+            False,
+            True,
+            alert,
+        )
     else:
-        return False, False, False, []
+        Root.schema = Root.next_schema.copy()
+        return True, True, False, []
 
 
 @callback(Output("export-config-button", "disabled"), Input("save-button", "disabled"))
@@ -187,8 +187,24 @@ def disable_export_config_button(save_button_state: bool):
     Input("export-config-button", "n_clicks"),
     prevent_initial_call=True,
 )
-def export(n_clicks: bool) -> Literal[True]:
-    return True
+def click_export_config_button(n_clicks: int):
+    if Root.schema_filename is not None:
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True)
+        filename = filedialog.asksaveasfilename()
+
+        if filename:
+            Root.config = config_factory.Config(
+                "untitiled", "Insert description here", Root.schema_filename
+            )
+            Root.config.generate_items()
+            Root.config_filename = filename
+            Root.next_config = Root.config.copy()
+            Root.next_config.save(Root.config_filename)
+
+        return True
+    return False
 
 
 # ---------------------------------------------------------------------------------------------------

@@ -51,6 +51,10 @@ def layout() -> html.Div:
             "cellEditor": "agLargeTextCellEditor",
             "cellRenderer": "markdown",
             "autoHeight": True,
+            "cellEditorParams": {
+                "maxLength": 16_777_215,
+            },
+            "wrapText": True,
         },
     ]
     rowData = []

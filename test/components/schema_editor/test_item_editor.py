@@ -24,6 +24,10 @@ def test_deleted_selected_callback():
 
 
 def test_add_item():
+    Root.next_schema = None
+    assert add_item(True) == {}
+
+    Root.next_schema = MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS.copy()
     assert add_item(True) == {
         "add": [
             {

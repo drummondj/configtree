@@ -47,6 +47,11 @@ class Config(JSONWizard):
         for schema_item in self.schema.items:
             self.items.append(ConfigItem(schema_item, value=schema_item.default))
 
+    def sort_by_group_then_name(self) -> None:
+        self.items.sort(
+            key=lambda item: (item.schema_item.group, item.schema_item.name)
+        )
+
     def validate_name(self) -> None:
         if not validators.validate_alpha_num(self.name):
             self.errors.append(
@@ -73,9 +78,7 @@ class Config(JSONWizard):
         self.errors = []
         self.validate_name()
         self.validate_desc()
-        # self.validate_default()
-        # self.validate_options()
-        # self.validate_group(parent)
+        # TODO: validate options
         if len(self.errors) == 0:
             return True
         else:
@@ -103,9 +106,12 @@ def from_json(string: str) -> Config:
     configs = Config.from_json(string)
     if isinstance(configs, list):
         # TODO: throw something
-        return configs[0]
+        config = configs[0]
     else:
-        return configs
+        config = configs
+
+    config.sort_by_group_then_name()
+    return config
 
 
 def load(filename: str) -> Config:

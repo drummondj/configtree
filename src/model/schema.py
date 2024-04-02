@@ -260,8 +260,6 @@ class Schema(JSONWizard):
         for group in self.groups:
             group.validate()
 
-        print(self.errors)
-
         return len(self.errors) == 0
 
     def get_errors(self) -> List[SchemaValidationError]:

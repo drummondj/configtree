@@ -22,21 +22,37 @@ def test_group_names_store():
 
 
 def test_layout():
-    init_valid_schema()
+    Root.next_schema = None
+    assert "Schema loading, please wait ..." in str(layout())
+
+    init_valid_schema(mock=MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS)
     assert isinstance(layout(), html.Div)
 
 
 def test_deleted_selected_callback() -> None:
+    Root.next_schema = None
+    assert deleted_selected(True, []) == (
+        True,
+        False,
+        [],
+    )
+
     init_valid_schema(mock=MOCK_SCHEMA_WITH_GROUPS_AND_ITEMS)
-    selection = [{"name": "group0"}]
+    selection = [{"name": "name0"}]
     assert deleted_selected(True, selection) == (
         False,
         True,
-        ["name0", "name1", "name2"],
+        ["name1", "name2"],
     )
 
 
 def test_add_group():
+    Root.next_schema = None
+    assert add_group(True) == (
+        {},
+        [],
+    )
+
     init_valid_schema()
     assert add_group(True) == (
         {
@@ -53,6 +69,12 @@ def test_add_group():
 
 
 def test_update():
+    Root.next_schema = None
+    assert update(True, []) == (
+        True,
+        [],
+    )
+
     init_valid_schema()
     new_rows = [
         {"name": "Synthesis", "desc": "Synthesis Options", "order": 0},

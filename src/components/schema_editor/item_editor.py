@@ -55,6 +55,10 @@ def layout(schema: Schema) -> html.Div:
             "editable": True,
             "cellEditorPopup": True,
             "cellEditor": "agLargeTextCellEditor",
+            "cellEditorParams": {
+                "maxLength": 16_777_215,
+            },
+            "wrapText": True,
             "flex": 8,
         },
     ]

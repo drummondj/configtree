@@ -39,3 +39,11 @@
 .error-icon {
     float: left;
 }
+
+form {
+    border: 1px solid #aaa;
+    padding: 1em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 7px #aaa;
+    margin-top: 10px;
+}

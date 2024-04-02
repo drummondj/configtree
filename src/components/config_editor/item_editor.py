@@ -11,7 +11,13 @@ def layout() -> html.Div:
         return html.Div("No config loaded, please wait ...")
 
     columnDefs = [
-        {"field": "group", "headerName": "Group", "flex": 4, "filter": True},
+        {
+            "field": "group",
+            "headerName": "Group",
+            "flex": 4,
+            "filter": True,
+            "sortable": True,
+        },
         {
             "field": "name",
             "headerName": "Item",
@@ -25,6 +31,10 @@ def layout() -> html.Div:
             "editable": True,
             "flex": 4,
             "cellEditor": {"function": "CustomConfigValueEditor"},
+            "cellStyle": {
+                "background-color": "rgb(255 255 240)",
+                "box-shadow": "0 0 7px rgb(0 0 0 / 20%)",
+            },
         },
         {
             "field": "desc",
@@ -32,6 +42,7 @@ def layout() -> html.Div:
             "flex": 8,
             "cellRenderer": "markdown",
             "autoHeight": True,
+            "wrapText": True,
         },
         {
             "field": "default",
@@ -67,6 +78,7 @@ def layout() -> html.Div:
             "singleClickEdit": True,
             "animateRows": False,
             "stopEditingWhenCellsLoseFocus": True,
+            "setSort": "group",
         },
         className="ag-theme-alpine compact",
         style={"height": None},

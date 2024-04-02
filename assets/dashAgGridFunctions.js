@@ -79,6 +79,7 @@ dagfuncs.CustomConfigValueEditor = class {
 
     // focus and select can be done after the gui is attached
     afterGuiAttached() {
+        this.eInput.focus();
         this.eInput.showPicker();
     }
 
