@@ -5,7 +5,7 @@
 
 ConfigTree is a configuration management system that uses inheritance based on a hierarchical tree structure. It is intended to be used in complex scientific and engineering data flows, where the flow is developed separately from the configuration and execution of the flow.
 
-`Schema` is a list of variables used to configure a flow, along with their default values, datatypes and possible options.
+`Schema` is a list of variables used to configure a flow, along with their default values, datatypes and possible options. Variables can be grouped into categories to make it easier to handle large configurations.
 
 `Config` is an instance of a `Schema` that the end-user can edit to customize how the flow works.
 
