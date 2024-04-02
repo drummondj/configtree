@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import filedialog
-from typing import Literal
 
 import dash_bootstrap_components as dbc
 from dash import Input, Output, callback, html
